@@ -100,6 +100,10 @@ vim.g.have_nerd_font = true
 vim.o.textwidth = 120
 vim.o.colorcolumn = '120'
 
+-- Set the tab width
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
+
 -- Spell checking
 vim.opt.spell = false
 
@@ -151,6 +155,8 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 20
 
+-- Much nicer Latex
+vim.o.conceallevel = 2
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -214,6 +220,12 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'nvim-treesitter/nvim-treesitter-context', -- Show context of the current cursor position
+  {
+    'lervag/vimtex',
+    init = function()
+      -- Use init for configuration, don't use the more common "config".
+    end,
+  },
 
   'github/copilot.vim',
   { 'm4xshen/autoclose.nvim', opts = {} },
@@ -402,34 +414,6 @@ require('lazy').setup({
     },
     config = function()
       -- Brief Aside: **What is LSP?**
-      --
-      -- LSP is an acronym you've probably heard, but might not understand what it is.
-      --
-      -- LSP stands for Language Server Protocol. It's a protocol that helps editors
-      -- and language tooling communicate in a standardized fashion.
-      --
-      -- In general, you have a "server" which is some tool built to understand a particular
-      -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc). These Language Servers
-      -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-      -- processes that communicate with some "client" - in this case, Neovim!
-      --
-      -- LSP provides Neovim with features like:
-      --  - Go to definition
-      --  - Find references
-      --  - Autocompletion
-      --  - Symbol Search
-      --  - and more!
-      --
-      -- Thus, Language Servers are external tools that must be installed separately from
-      -- Neovim. This is where `mason` and related plugins come into play.
-      --
-      -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
-      -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
-      --  This function gets run when an LSP attaches to a particular buffer.
-      --    That is to say, every time a new file is opened that is associated with
-      --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-      --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -731,10 +715,25 @@ require('lazy').setup({
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'svelte', 'typescript', 'javascript', 'json', 'yaml', 'bash', 'svelte' },
+        ensure_installed = {
+          'bash',
+          'c',
+          'html',
+          'lua',
+          'markdown',
+          'vim',
+          'vimdoc',
+          'svelte',
+          'typescript',
+          'javascript',
+          'json',
+          'yaml',
+          'bash',
+          'svelte',
+        },
         -- Autoinstall languages that are not installed
         auto_install = true,
-        highlight = { enable = true },
+        highlight = { enable = true, disable = { 'latex' } },
         indent = { enable = true },
       }
 
