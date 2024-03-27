@@ -105,7 +105,7 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 
 -- Spell checking
-vim.opt.spell = false
+vim.opt.spell = true
 
 -- Make line numbers default
 vim.opt.number = true
@@ -233,6 +233,14 @@ require('lazy').setup({
     'kdheepak/lazygit.nvim',
     config = function()
       vim.keymap.set('n', '<leader>g', '<cmd>LazyGit<CR>', { noremap = true, silent = true })
+    end,
+  },
+
+  {
+    'glacambre/firenvim',
+    lazy = not vim.g.started_by_firenvim,
+    build = function()
+      vim.fn['firenvim#install'](0)
     end,
   },
 
@@ -589,6 +597,11 @@ require('lazy').setup({
           end
           return 'make install_jsregexp'
         end)(),
+        config = function()
+          require('luasnip.loaders.from_vscode').lazy_load()
+          -- require('luasnip.loaders.from_vscode').lazy_load { paths = '~/.config/nvim/custom_snippets/' }
+          require('luasnip.loaders.from_vscode').load_standalone { path = '~/.config/nvim/custom_snippets/tex.json' }
+        end,
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -603,6 +616,7 @@ require('lazy').setup({
       --    for various frameworks/libraries/etc. but you will have to
       --    set up the ones that are useful for you.
       'rafamadriz/friendly-snippets',
+      'evesdropper/luasnip-latex-snippets.nvim',
     },
 
     config = function()
@@ -687,6 +701,8 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
+      require('mini.align').setup()
+
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -724,12 +740,14 @@ require('lazy').setup({
           'vim',
           'vimdoc',
           'svelte',
-          'typescript',
-          'javascript',
+          -- 'typescript',
+          -- 'javascript',
           'json',
           'yaml',
           'bash',
           'svelte',
+          'css',
+          'scss',
         },
         -- Autoinstall languages that are not installed
         auto_install = true,
