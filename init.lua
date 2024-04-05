@@ -228,7 +228,7 @@ vim.opt.rtp:prepend(lazypath)
 --
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'nvim-treesitter/nvim-treesitter-context', -- Show context of the current cursor position
+  { 'nvim-treesitter/nvim-treesitter-context', opts = { max_lines = 3 } }, -- Show context of the current cursor position
   {
     'lervag/vimtex',
     init = function()
